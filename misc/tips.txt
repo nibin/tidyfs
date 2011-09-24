@@ -1,0 +1,19 @@
+Global setup:
+ Set up git
+  git config --global user.name "Nibin Varghese"
+  git config --global user.email nibin012@gmail.com
+        
+Next steps:
+  mkdir tidyfs
+  cd tidyfs
+  git init
+  touch README
+  git add README
+  git commit -m 'first commit'
+  git remote add origin git@github.com:nibin/tidyfs.git
+  git push -u origin master
+      
+Existing Git Repo?
+  cd existing_git_repo
+  git remote add origin git@github.com:nibin/tidyfs.git
+  git push -u origin master
