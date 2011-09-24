@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="metaserver"/>
-	<classpathentry kind="src" path="nodeserver"/>
-	<classpathentry kind="src" path="explorer"/>
+	<classpathentry kind="src" path="metaserver/src/main/java"/>
+	<classpathentry kind="src" path="nodeserver/src/main/java"/>
+	<classpathentry kind="src" path="explorer/src/main/java"/>
+	<classpathentry kind="src" path="metaserver/src/test/java"/>
+	<classpathentry kind="src" path="nodeserver/src/test/java"/>
+	<classpathentry kind="src" path="explorer/src/test/java"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

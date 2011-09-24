@@ -1,0 +1,94 @@
+<?xml version="1.0"?>
+<project name="filesystem" basedir="." default="buildAllModules">
+	<description>
+        Master Build file for TidyFS Project
+    </description>
+
+	<property name="tidyfs.root" location="${basedir}" />
+	<property file="build.properties" />
+	<property name="testng.output.dir"  location="${tidyfs.root}/test-output" />
+	<property name="dist.dir" location="dist" />
+	<property name="lib.dir" location="${tidyfs.root}/lib" />
+	<property name="src.dir" value="src/main/java" />
+	<property name="test.dir" value="src/test/java"/>
+	<property name="integration.dir" value="src/integration/java" />
+
+	<target name="compileAllModules">
+		<subant target="compile-module" genericantfile="build.xml">
+			<fileset dir="metaserver" includes="build.xml" />
+			<fileset dir="nodeserver" includes="build.xml" />
+			<fileset dir="explorer" includes="build.xml" />
+		</subant>
+	</target>
+
+	<target name="buildAllModules" depends="compileAllModules">
+		<subant target="jar" genericantfile="build.xml">
+			<fileset dir="metaserver" includes="build.xml" />
+			<fileset dir="nodeserver" includes="build.xml" />
+			<fileset dir="explorer" includes="build.xml" />
+		</subant>
+	</target>
+
+	<target name="publish-zip" depends="buildAllModules">
+		<move todir="${dist.dir}" file="${module.metaserver.name}-${project.version}.jar" />
+		<move todir="${dist.dir}" file="${module.nodeserver.name}-${project.version}.jar" />
+		<move todir="${dist.dir}" file="${module.explorer.name}-${project.version}.jar" />
+		<zip destfile="${dist.dir}/${project.name}-${project.version}.zip">
+			<zipfileset dir="lib" prefix="${project.name}-${project.version}/lib" />			
+			<zipfileset file="${dist.dir}/${module.metaserver.name}-${project.version}.jar" prefix="${project.name}-${project.version}" />
+			<zipfileset file="${dist.dir}/${module.nodeserver.name}-${project.version}.jar" prefix="${project.name}-${project.version}" />
+			<zipfileset file="${dist.dir}/${module.explorer.name}-${project.version}.jar" prefix="${project.name}-${project.version}" />
+		</zip>
+		<delete file="${dist.dir}/${module.metaserver.name}-${project.version}.jar"/>
+		<delete file="${dist.dir}/${module.nodeserver.name}-${project.version}.jar"/>
+		<delete file="${dist.dir}/${module.explorer.name}-${project.version}.jar"/>
+	</target>
+
+
+	<target name="run-testngsuite">
+		<echo message="Running test cases" />
+		<subant target="compile-module-test" genericantfile="build.xml">
+			<fileset dir="metaserver" includes="build.xml" />
+			<fileset dir="nodeserver" includes="build.xml" />
+			<fileset dir="explorer" includes="build.xml" />
+		</subant>
+
+		<path id="lib.dir.id">
+			<fileset dir="${tidyfs.root}/lib">
+				<include name="**/*.jar" />
+			</fileset>
+		</path>
+
+		<path id="testng.classpath">
+			<pathelement location="${tidyfs.root}/build/${module.metaserver.name}/classes"/>
+			<pathelement location="${tidyfs.root}/build/${module.nodeserver.name}/classes"/>
+			<pathelement location="${tidyfs.root}/build/${module.explorer.name}/classes"/>
+			<pathelement location="${tidyfs.root}/build/${module.metaserver.name}/test"/>
+			<pathelement location="${tidyfs.root}/build/${module.nodeserver.name}/test"/>
+			<pathelement location="${tidyfs.root}/build/${module.explorer.name}/test"/>
+			<pathelement location="${tidyfs.root}/build/${module.metaserver.name}/integration"/>
+			<pathelement location="${tidyfs.root}/build/${module.nodeserver.name}/integration"/>
+			<pathelement location="${tidyfs.root}/build/${module.explorer.name}/integration"/>
+		</path>
+
+		<taskdef name="testng" classpathref="lib.dir.id"
+							          classname="org.testng.TestNGAntTask" />
+
+		<testng verbose="5" outputdir="${testng.output.dir}" 
+						classpathref="lib.dir.id">
+			<classpath>
+				<path refid="testng.classpath"/>
+			</classpath>
+
+			<xmlfileset includes="testng.xml" dir="${tidyfs.root}"/>
+		</testng>
+	</target>
+
+	<target name="clean-all">
+		<subant target="clean-all" genericantfile="build.xml">
+			<fileset dir="metaserver" includes="build.xml" />
+			<fileset dir="nodeserver" includes="build.xml" />
+			<fileset dir="explorer" includes="build.xml" />
+		</subant>
+	</target>
+</project>

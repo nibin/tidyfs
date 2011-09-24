@@ -1,0 +1,23 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+
+<suite name="TidyFS Test Suite" verbose="1">
+
+	<test name="TidyFS Metaserver Unit Tests">
+		<packages>
+			<package name="com.nvarghese.tidyfs.metas.*" />			
+		</packages>
+	</test>
+
+	<test name="TidyFS Nodeserver Unit Tests">
+		<packages>
+			<package name="com.nvarghese.tidyfs.nodes.*" />
+		</packages>
+	</test>
+	
+	<test name="TidyFS Explorer Unit Tests">
+		<packages>
+			<package name="com.nvarghese.tidyfs.explor.*" />
+		</packages>
+	</test>
+	
+</suite>

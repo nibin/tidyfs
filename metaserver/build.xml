@@ -1,0 +1,92 @@
+<?xml version="1.0"?>                     
+<project name="beehive" basedir="." xmlns:ivy="antlib:org.apache.ivy.ant">
+    <description>Build file for TidyFS Metaserver module</description>
+    <import file="${basedir}/../commontasks.xml"/>
+
+    <target name="init-properties">
+
+        <property name="tidyfs.root" location="${basedir}/../"/>
+        <property file="${tidyfs.root}/build.properties"/>
+        <property name="artifact.name" value="${module.metaserver.name}-${project.version}"/>
+
+        <property name="build.root.dir" location="${tidyfs.root}/build"/>
+        <property name="build.dir" location="${tidyfs.root}/build/${module.metaserver.name}"/>
+        <property name="build.classes" location="${build.dir}/classes"/>
+        <property name="build.test" location="${build.dir}/test"/>
+        <property name="build.integration" location="${build.dir}/integration"/>
+
+        <property name="dist.dir" location="${tidyfs.root}/dist"/>
+        <property name="src.dir" location="src/main/java"/>
+        <property name="test.dir" location="src/test/java"/>
+        <property name="integration.dir" location="src/integration/java"/>
+        <property name="testng.output.root.dir" location="${tidyfs.root}/test-output"/>
+        <property name="testng.output.dir" location="${testng.output.root.dir}/${module.metaserver.name}"/>
+
+        <property name="lib.dir" value="${tidyfs.root}/lib/"/>
+
+        <property name="classpath" location="${lib.dir}"/>
+        <!-- TODO: define main class -->
+        <property name="main-class" value=""/>
+
+    </target>
+
+    <target name="prepare-compile">
+        <path id="java.compile.classpath">
+            <pathelement location="${build.classes}"/>
+            <fileset dir="${lib.dir}">
+                <include name="**/*.jar"/>
+            </fileset>
+        </path>
+    </target>
+
+    <target name="prepare-buildjar">
+        <path id="jar.classpath">
+            <fileset dir="${lib.dir}">
+                <include name="**/*.jar"/>
+            </fileset>
+        </path>
+    </target>
+
+    <target name="prepare-compile-tests">
+        <path id="lib.dir.id">
+            <fileset dir="${lib.dir}">
+                <include name="**/*.jar"/>
+            </fileset>
+        </path>
+        <path id="test.compile.classpath">
+            <pathelement location="${build.classes}"/>
+            <path refid="lib.dir.id"/>
+        </path>
+
+        <path id="testng.classpath">
+            <pathelement location="${build.classes}"/>
+            <pathelement location="${build.test}"/>
+            <pathelement location="${build.integration}"/>
+        </path>
+
+    </target>
+
+
+	<!--
+	<target name="ivy-tasks-configure" depends="ivy-download,ivy-taskdef">
+        <ivy:configure/>
+    </target> 
+    -->
+	
+	<target name="ivy-tasks-configure" depends="ivy-download,ivy-taskdef">
+		<ivy:settings file="${tidyfs.root}/ivysettings.xml" id="${ant.project.name}"/>
+	</target>
+
+    <target name="ivy-tasks-resolve">
+        <ivy:resolve file="${tidyfs.root}/ivy.xml" conf="${ivy.configurations}"/>
+    </target>
+
+    <target name="ivy-tasks-retrieve">
+        <ivy:retrieve pattern="${lib.dir}/[artifact]-[revision].[ext]" conf="default"/>
+    </target>
+
+    <target name="ivy-tasks-retrieve-tests">
+        <ivy:retrieve pattern="${lib.dir}/[artifact]-[revision].[ext]" conf="*"/>
+    </target>
+
+</project>
